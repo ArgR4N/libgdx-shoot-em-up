@@ -7,6 +7,7 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.Texture.TextureFilter;
 import com.badlogic.gdx.graphics.g2d.Animation;
+import com.badlogic.gdx.graphics.g2d.Animation.PlayMode;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -31,8 +32,7 @@ public class Game extends ApplicationAdapter {
 	
 	//Inside rocket class...	
 	Texture rocketSheet;
-	TextureRegion[] rocketFrames;
-	Animation<TextureRegion> rocketAnimaion;
+	Animation<TextureRegion> rocketAnimation;
 	float stateTime = 0;
 	
 	
@@ -53,8 +53,8 @@ public class Game extends ApplicationAdapter {
 		rocketSheet = new Texture("ship_engage.png");
 		
 		TextureRegion[][] tmp = TextureRegion.split(rocketSheet, 64, 64);
-		rocketAnimaion = new Animation<>(0.1f, tmp[0]);
-		
+		rocketAnimation = new Animation<>(0.2f, tmp[0]);
+		rocketAnimation.setPlayMode(PlayMode.LOOP);
 		backgroundTexture = new Texture("background.png");
 		backgroundTexture.setFilter(TextureFilter.Linear, TextureFilter.Linear);
 		//background[1][1] = new BackgroundTile(1, 1, backgroundTexture, player.getX(), player.getY());
@@ -131,21 +131,25 @@ public class Game extends ApplicationAdapter {
 		batch.end();
 
 		stateTime += Gdx.graphics.getDeltaTime();
-		TextureRegion currentFrame = rocketAnimaion.getKeyFrame(stateTime);
+		TextureRegion currentFrame = rocketAnimation.getKeyFrame(stateTime);
 		
 
-		System.out.println("State time: " + stateTime);
-		System.out.println("CurrentFrame" + currentFrame);
+		//System.out.println("State time: " + stateTime);
+		//System.out.println("CurrentFrame" + currentFrame);
+		
 		//Draw de jugador
 		batch.enableBlending();
 		batch.begin();
 			player.render(batch);
+			
+			//Anmacion provisoria, frames no funcionando?
 			if(move > 0) {
+				//Cambiar!
 				batch.draw(currentFrame, player.getX(), player.getY(), player.sprite.getOriginX(), player.sprite.getOriginY(), player.sprite.getWidth(), player.sprite.getHeight(), player.sprite.getScaleX(), player.sprite.getScaleY(), player.sprite.getRotation());
 			}	
 			//Texto para visualizar el movimiento del jugador
-			font.draw(batch, "Posicion: " + player.getX() + ", " + player.getY(), player.getX(), player.getY());
-			font.draw(batch, "Move: " + move + ", " + "Rotacion: " + rotation, player.getX(), player.getY()-20);
+			//font.draw(batch, "Posicion: " + player.getX() + ", " + player.getY(), player.getX(), player.getY());
+			//font.draw(batch, "Move: " + move + ", " + "Rotacion: " + rotation, player.getX(), player.getY()-20);
 			
 			//font.draw(batch, XMove + ", " + YMove + " | " + player.sprite.getRotation(), player.getX(), player.getY()-20);
 		batch.end();
